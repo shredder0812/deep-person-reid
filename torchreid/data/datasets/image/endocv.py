@@ -16,7 +16,7 @@ class EndoCV(ImageDataset):
         - identities: 4
         - images: 830 (train) + 54 (query) + 223 (gallery).
     """
-    _junk_pids = [0, -1]
+    #_junk_pids = [0, -1]
     dataset_dir = 'endocv'
     dataset_url = 'https://drive.google.com/file/d/13I-Juawl9RTbN3TN1E4vlPLa_EwvHTtE/view?usp=sharing'
 
@@ -53,6 +53,7 @@ class EndoCV(ImageDataset):
         train = self.process_dir(self.train_dir, relabel=True)
         query = self.process_dir(self.query_dir, relabel=False)
         gallery = self.process_dir(self.gallery_dir, relabel=False)
+        gallery = [(x[0], x[1], 1) for x in gallery]  # camera view 1
         if self.endocv_distractor:
             gallery += self.process_dir(self.extra_gallery_dir, relabel=False)
 
@@ -83,5 +84,3 @@ class EndoCV(ImageDataset):
             data.append((img_path, pid, camid))
 
         return data
-
-torchreid.data.register_image_dataset('endocv', EndoCV)
