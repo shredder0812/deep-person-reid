@@ -1,7 +1,7 @@
 from __future__ import print_function, absolute_import
-
+import torchreid
 from .image import (
-    GRID, PRID, CUHK01, CUHK02, CUHK03, MSMT17, CUHKSYSU, VIPeR, SenseReID,
+    EndoCV, GRID, PRID, CUHK01, CUHK02, CUHK03, MSMT17, CUHKSYSU, VIPeR, SenseReID,
     Market1501, DukeMTMCreID, University1652, iLIDS
 )
 from .video import PRID2011, Mars, DukeMTMCVidReID, iLIDSVID
@@ -20,7 +20,8 @@ __image_datasets = {
     'prid': PRID,
     'cuhk02': CUHK02,
     'university1652': University1652,
-    'cuhksysu': CUHKSYSU
+    'cuhksysu': CUHKSYSU,
+    'endocv': EndoCV
 }
 
 __video_datasets = {
@@ -84,7 +85,6 @@ def register_image_dataset(name, dataset):
             'another name excluding {}'.format(curr_datasets)
         )
     __image_datasets[name] = dataset
-
 
 def register_video_dataset(name, dataset):
     """Registers a new video dataset.
