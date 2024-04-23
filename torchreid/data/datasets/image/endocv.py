@@ -76,8 +76,8 @@ class EndoCV(ImageDataset):
             pid, camid = map(int, pattern.search(img_path).groups())
             if pid == -1:
                 continue # junk images are just ignored
-            assert 0 <= pid <= 4 # pid == 0 means background
-            assert 1 <= camid <= 2
+            assert 0 <= pid <= 10 # pid == 0 means background
+            assert 1 <= camid <= 6
             camid -= 1 # index starts from 0
             if relabel:
                 pid = pid2label[pid]
