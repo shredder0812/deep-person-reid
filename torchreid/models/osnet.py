@@ -482,7 +482,7 @@ def init_pretrained_weights(model, key=''):
       if key == 'osnet_x0_25_endocv':
         filename = key + '.pth'
         cached_file = os.path.join(model_dir, filename)
-        gdown.download(pretrained_urls[key], quiet=False)
+        gdown.download(pretrained_urls[key], cached_file, quiet=False)
       else:
         gdown.download(pretrained_urls[key], cached_file, quiet=False)
 
