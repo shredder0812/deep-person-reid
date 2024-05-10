@@ -19,7 +19,7 @@ pretrained_urls = {
     'https://drive.google.com/uc?id=1rb8UN5ZzPKRc_xvtHlyDh-cSz88YX9hs',
     'osnet_ibn_x1_0':
     'https://drive.google.com/uc?id=1sr90V6irlYYDd4_4ISU2iruoRG8J__6l',
-    'osnet_x0_25_endoocv':
+    'osnet_x0_25_endocv':
     'https://drive.google.com/uc?id=1W8mz6skAUmg33zMVpWn6woJym7xGygjh'
 }
 
@@ -479,6 +479,11 @@ def init_pretrained_weights(model, key=''):
     cached_file = os.path.join(model_dir, filename)
 
     if not os.path.exists(cached_file):
+      if key == 'osnet_x0_25_endocv':
+        filename = key + '.pth'
+        cached_file = os.path.join(model_dir, filename)
+        gdown.download(pretrained_urls[key], quiet=False)
+      else:
         gdown.download(pretrained_urls[key], cached_file, quiet=False)
 
     state_dict = torch.load(cached_file)
