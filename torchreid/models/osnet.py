@@ -5,7 +5,7 @@ from torch import nn
 from torch.nn import functional as F
 
 __all__ = [
-    'osnet_x1_0', 'osnet_x0_75', 'osnet_x0_5', 'osnet_x0_25', 'osnet_ibn_x1_0'
+    'osnet_x1_0', 'osnet_x0_75', 'osnet_x0_5', 'osnet_x0_25', 'osnet_ibn_x1_0', 'osnet_x0_25_endocv'
 ]
 
 pretrained_urls = {
@@ -18,7 +18,9 @@ pretrained_urls = {
     'osnet_x0_25':
     'https://drive.google.com/uc?id=1rb8UN5ZzPKRc_xvtHlyDh-cSz88YX9hs',
     'osnet_ibn_x1_0':
-    'https://drive.google.com/uc?id=1sr90V6irlYYDd4_4ISU2iruoRG8J__6l'
+    'https://drive.google.com/uc?id=1sr90V6irlYYDd4_4ISU2iruoRG8J__6l',
+    'osnet_x0_25_endoocv':
+    'https://drive.google.com/uc?id=1W8mz6skAUmg33zMVpWn6woJym7xGygjh'
 }
 
 
