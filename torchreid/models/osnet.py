@@ -3,9 +3,10 @@ import warnings
 import torch
 from torch import nn
 from torch.nn import functional as F
+from torchvision.ops import DeformConv2d
 
 __all__ = [
-    'osnet_x1_0', 'osnet_x0_75', 'osnet_x0_5', 'osnet_x0_25', 'osnet_ibn_x1_0', 'osnet_x0_25_endocv'
+    'osnet_x1_0', 'osnet_x0_75', 'osnet_x0_5', 'osnet_x0_25', 'osnet_ibn_x1_0', 'osnet_x0_25_endocv', 'osnet_dcn_x0_5_endocv'
 ]
 
 pretrained_urls = {
@@ -278,6 +279,28 @@ class OSBlock(nn.Module):
         return F.relu(out)
 
 
+class DeformableOSBlock(nn.Module):
+    """Deformable convolution block for OSNet conv5."""
+    def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=1):
+        super(DeformableOSBlock, self).__init__()
+        self.offset_conv = nn.Conv2d(
+            in_channels, 2 * kernel_size * kernel_size, 
+            kernel_size=kernel_size, stride=stride, padding=padding
+        )
+        self.deform_conv = DeformConv2d(
+            in_channels, out_channels, kernel_size=kernel_size, 
+            stride=stride, padding=padding
+        )
+        self.bn = nn.BatchNorm2d(out_channels)
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, x):
+        offset = self.offset_conv(x)
+        x = self.deform_conv(x, offset)
+        x = self.bn(x)
+        x = self.relu(x)
+        return x
+
 ##########
 # Network architecture
 ##########
@@ -522,6 +545,35 @@ def init_pretrained_weights(model, key=''):
                 format(discarded_layers)
             )
 
+# Định nghĩa OSNet với DCN
+class OSNetWithDCN(OSNet):
+    def __init__(
+        self,
+        num_classes,
+        blocks,
+        layers,
+        channels,
+        feature_dim=512,
+        loss='softmax',
+        IN=False,
+        **kwargs
+    ):
+        super(OSNetWithDCN, self).__init__(
+            num_classes, blocks, layers, channels, feature_dim, loss, IN, **kwargs
+        )
+        # Thay conv5 bằng DeformableOSBlock
+        self.conv5 = DeformableOSBlock(channels[3], channels[3])
+        self._init_params()
+
+    def featuremaps(self, x):
+        x = self.conv1(x)
+        x = self.maxpool(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
+        x = self.conv5(x)  # Dùng DCN ở đây
+        return x
+
 
 ##########
 # Instantiation
@@ -617,4 +669,17 @@ def osnet_ibn_x1_0(
     )
     if pretrained:
         init_pretrained_weights(model, key='osnet_ibn_x1_0')
+    return model
+
+def osnet_dcn_x0_5_endocv(num_classes=1000, pretrained=True, loss='softmax', **kwargs):
+    model = OSNetWithDCN(
+        num_classes,
+        blocks=[OSBlock, OSBlock, OSBlock],
+        layers=[2, 2, 2],
+        channels=[32, 128, 192, 256],
+        loss=loss,
+        **kwargs
+    )
+    if pretrained:
+        init_pretrained_weights(model, key='osnet_dcn_x0_5_endocv')  # Dùng weights của osnet_x1_0
     return model

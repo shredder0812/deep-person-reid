@@ -75,7 +75,9 @@ __model_factory = {
     'osnet_ain_x1_0': osnet_ain_x1_0,
     'osnet_ain_x0_75': osnet_ain_x0_75,
     'osnet_ain_x0_5': osnet_ain_x0_5,
-    'osnet_ain_x0_25': osnet_ain_x0_25
+    'osnet_ain_x0_25': osnet_ain_x0_25,
+    'osnet_dcn_x0_5_endocv': osnet_dcn_x0_5_endocv,
+    
 }
 
 
