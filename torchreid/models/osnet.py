@@ -677,7 +677,7 @@ def osnet_ibn_x1_0(
         init_pretrained_weights(model, key='osnet_ibn_x1_0')
     return model
 
-def osnet_dcn_x0_5_endocv(num_classes=1000, pretrained=True, loss='softmax', **kwargs):
+def osnet_dcn_x0_5_endocv(num_classes=1000, pretrained=True, loss='softmax', freeze_backbone=True, **kwargs):
     model = OSNetWithDCN(
         num_classes,
         blocks=[OSBlock, OSBlock, OSBlock],
@@ -687,5 +687,12 @@ def osnet_dcn_x0_5_endocv(num_classes=1000, pretrained=True, loss='softmax', **k
         **kwargs
     )
     if pretrained:
-        init_pretrained_weights(model, key='osnet_dcn_x0_5_endocv')  # Dùng weights của osnet_x1_0
+        #init_pretrained_weights(model, key='osnet_dcn_x0_5_endocv')  # Dùng weights của osnet_x1_0
+        init_pretrained_weights(model, key='osnet_x0_5')
+        if freeze_backbone:
+            # Đóng băng conv1, conv2, conv3, conv4 dddddd
+            for name, param in model.named_parameters():
+                if 'conv5' not in name and 'fc' not in name and 'classifier' not in name:
+                    param.requires_grad = False
+            print("Backbone (conv1-conv4) frozen. Training only conv5, fc, and classifier.")
     return model
