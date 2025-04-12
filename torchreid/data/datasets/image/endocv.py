@@ -13,7 +13,7 @@ class EndoCV(ImageDataset):
     Reference:
         Cao Thanh Tung
     Dataset statistics:
-        - identities: 4
+        - identities: 51
         - images: 830 (train) + 54 (query) + 223 (gallery).
     """
     #_junk_pids = [0, -1]
@@ -77,7 +77,7 @@ class EndoCV(ImageDataset):
             if pid == -1:
                 continue # junk images are just ignored
             assert 0 <= pid <= 1000 # pid == 0 means background
-            assert 1 <= camid <= 6
+            assert 1 <= camid <= 10
             camid -= 1 # index starts from 0
             if relabel:
                 pid = pid2label[pid]

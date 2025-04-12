@@ -21,7 +21,9 @@ pretrained_urls = {
     'osnet_ibn_x1_0':
     'https://drive.google.com/uc?id=1sr90V6irlYYDd4_4ISU2iruoRG8J__6l',
     'osnet_x0_25_endocv':
-    'https://drive.google.com/uc?id=1W8mz6skAUmg33zMVpWn6woJym7xGygjh'
+    'https://drive.google.com/uc?id=1W8mz6skAUmg33zMVpWn6woJym7xGygjh',
+    'osnet_dcn_x0_5_endocv':
+    'https://drive.google.com/uc?id=16DGLbZukvVYgINws8u8deSaOqjybZ83i'
 }
 
 
@@ -506,6 +508,10 @@ def init_pretrained_weights(model, key=''):
         filename = key + '.pth'
         cached_file = os.path.join(model_dir, filename)
         gdown.download(pretrained_urls[key], cached_file, quiet=False)
+      elif key == 'osnet_dcn_x0_5_endocv':
+        filename = 'osnet_x0_5_imagenet.pth'
+        cached_file = os.path.join(model_dir, filename)
+        gdown.download(pretrained_urls['osnet_x0_5'], cached_file, quiet=False)
       else:
         gdown.download(pretrained_urls[key], cached_file, quiet=False)
 
